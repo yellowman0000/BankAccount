@@ -1,4 +1,4 @@
-# 🏦 Bank Management System
+# 🏦 Bank Management System: Implementation & Memory Logic Guide
 
 This document explains the logic behind each class to ensure every team member understands their specific part and how it connects to the overall system and Java memory management (Stack & Heap).
 
@@ -28,7 +28,7 @@ This document explains the logic behind each class to ensure every team member u
   - **Stack Pointer:** This chain of calls demonstrates how multiple **Stack Frames** are pushed onto the stack and "unwind" (pop) once finished.
   - **Encapsulation:** Using `private` for `updateBalance` shows that internal stack operations are hidden from the outside world.
 
-[Image of Java stack and heap memory allocation showing method call stack and object references]
+
 
 ---
 
@@ -40,4 +40,26 @@ This document explains the logic behind each class to ensure every team member u
   - Implement `triggerOverflow()`: A recursive method that calls itself without an exit condition.
 - **Memory Insight:**
   - **Inheritance in Heap:** A `SavingsAccount` object in the Heap allocates space for both its own variables and those inherited from the parent class.
-  - **StackOverflowError:** The recursive call is used to prove that the **Stack** has a limited size
+  - **StackOverflowError:** The recursive call is used to prove that the **Stack** has a limited size; the program will crash once the stack is full of frames.
+
+---
+
+## 🧪 5. Driver Class: `TestBank`
+**Responsibility:** System execution, Priority Scheduling, and Memory Testing.
+- **What to do:**
+  - Maintain a `List<IBankAccount>` to act as a processing Queue.
+  - **scheduleTransactions():** Logic to sort the list based on the `priority` attribute.
+  - **modifyValues():** A method to demonstrate the difference between passing a `double` (Primitive) and a `BankAccount` (Reference).
+- **Memory Insight:**
+  - **Scheduling:** Shows that we can control the order of execution (determining which frame is pushed onto the stack first).
+  - **Pass-by-Value vs. Pass-by-Reference:** Proves that changes to **Primitives** stay within their stack frame, while changes to **Objects** affect shared data in the Heap.
+
+---
+
+## 🛠️ Summary for Team Members
+| If you are coding... | Focus on... |
+| :--- | :--- |
+| **`IBankAccount`** | Ensuring method signatures match the team's agreement. |
+| **`BankAccount`** | The specific order of internal method calls (`deposit` -> `validate` -> `update`). |
+| **`SavingsAccount`** | Implementing the recursion for the Stack Overflow demo. |
+| **`TestBank`** | The list sorting logic (Priority) and the `modifyValues` test. |
