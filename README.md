@@ -2,6 +2,13 @@
 
 This document explains the logic behind each class to ensure every team member understands their specific part and how it connects to the overall system and Java memory management (Stack & Heap).
 
+
+---
+
+## 📊 System Design (UML Class Diagram)
+
+![Bank Account System UML Diagram](UML.png)
+
 ---
 
 ## 📑 1. Interface: `IBankAccount`
