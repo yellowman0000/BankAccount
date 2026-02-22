@@ -31,10 +31,4 @@ public class SavingsAccount extends BankAccount {
         this.interestRate = interestRate;
     }
 
-    @Override
-    public void displayInfo() {
-        super.displayInfo();
-        System.out.println("Account Type: Savings Account");
-        System.out.println("Interest Rate: " + (interestRate * 100) + "%");
-    }
 }

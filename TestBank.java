@@ -1,3 +1,4 @@
+//TestBank
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,24 +9,56 @@ public class TestBank {
     private List<IBankAccount> accountQueue = new ArrayList<>();
     
     public static void main(String[] args) {
-        // Create system and customer
-        TestBank engine = new TestBank();
-        Customer owner = new Customer("User");
+        // Create system
+        TestBank tester = new TestBank();
+
+        // Create customers
+        Customer c1 = new Customer("Project");
+        Customer c2 = new Customer("Q");
+        Customer c3 = new Customer("Chole");
+        Customer c4 = new Customer("Atul");
+        Customer c5 = new Customer("Gun");
 
         // Main and savings account
-        BankAccount mainAcc = new BankAccount(owner, 1000.0, 1);
-        SavingsAccount saveAcc = new SavingsAccount(owner, 500.0, 2, 0.05);
+        BankAccount acc1 = new BankAccount(c1, 1000.0, 3); // Project
+        SavingsAccount acc2 = new SavingsAccount(c2, 500.0, 1, 0.05); //Q (Highest priority)
+        BankAccount acc3 = new BankAccount(c3, 1500.0, 5); // Chole (Lowest priority)
+        BankAccount acc4 = new BankAccount(c4, 3000.0, 2); // Atul
+        BankAccount acc5 = new BankAccount(c5, 500.0, 4);  // Gun
 
-        // Example to show primitive vs reference type
+        // Demonstrate how primitive vs reference type
+        System.out.println("=== Memory Test: Primitive vs Reference ===");
         double testPrimitive = 500.0;
-        engine.modifyValues(testPrimitive, mainAcc);
+        System.out.println("Before method: Primitive = " + testPrimitive + ", Balance = " + acc1.getBalance());
 
-        engine.runConcurrentTransactions(mainAcc);
+        tester.modifyValues(testPrimitive, acc1);
+        System.out.println("After method (Stack check): Primitive = " + testPrimitive); 
+        System.out.println("After method (Heap check): Balance = " + acc1.getBalance());
+        System.out.println("-------------------------------------------\n");
+
+        // Demonstrate Concurrency (Multiple strack)
+        System.out.println("=== Concurrency Test for Q's Account ===");
+        System.out.println("Starting threads to deposit money...");
+        tester.runConcurrentTransactions(acc2);
 
         // Add accounts to the queue and sort
-        engine.accountQueue.add(saveAcc);
-        engine.accountQueue.add(mainAcc);
-        engine.scheduleTransactions();
+        tester.accountQueue.add(acc1);
+        tester.accountQueue.add(acc2);
+        tester.accountQueue.add(acc3);
+        tester.accountQueue.add(acc4);
+        tester.accountQueue.add(acc5);
+        System.out.println("\n=== Final Priority Scheduling (All Customers) ===");
+        tester.scheduleTransactions();
+
+        // Demonstrate Stack Overflow (The Crash Test)
+        // ------ Uncomment the code below to see the stack overflow in action (Warning: It will crash the program) ----------
+        /* System.out.println("\n=== Stack Overflow Test (Limit of Memory) ===");
+        System.out.println("Wait for 3 seconds before crashing...");
+        try {
+            Thread.sleep(3000); // time to read the message before crashing (3 seconds)
+        } catch (InterruptedException e) {}
+
+        acc2.triggerOverflow(); */
     }
 
     
@@ -41,6 +74,8 @@ public class TestBank {
         Runnable loginAndDeposit = () -> {
             for (int i = 0; i < 50; i++) {
                 acc.deposit(10.0);
+                // Print Thred name
+                System.out.println(Thread.currentThread().getName() + " deposited 10. Remaining Loop: " + (49-i));
             }
         };
         
@@ -64,7 +99,7 @@ public class TestBank {
     public void scheduleTransactions() {
         accountQueue.sort(Comparator.comparingInt(IBankAccount::getPriority));
         for (IBankAccount acc : accountQueue) {
-            System.out.println("Priority: " + acc.getPriority() + " | Balance: " + acc.getBalance());
+            System.out.println("Priority: " + acc.getPriority() + " | Owner: " + acc.getOwnerName() +" | Balance: " + acc.getBalance());
         }
     }
-}// TestBank
+}
