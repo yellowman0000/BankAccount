@@ -5,7 +5,7 @@ This document explains the logic behind each class to ensure every team member u
 
 ---
 
-## 📊 System Design (UML Class Diagram) (Old version. New version is on the report)
+## 📊 System Design (UML Class Diagram)
 
 ![Bank Account System UML Diagram](UML.png)
 
